@@ -132,29 +132,51 @@ describe('replace chain', async function () {
 
   before(async () => {
     blockchain = new Blockchain();
-    newblockchain = new Blockchain(); 
+    newblockchain = new Blockchain();
     blockchain.addBlock({ data: "new Block transaction 1" })
     blockchain.addBlock({ data: "new Block transaction 2" })
 
-    originalChain= blockchain.chain;
+    originalChain = blockchain.chain;
     // console.log(block);
-      });
+  });
   describe('when the new chain is not longer', async function () {
-    it('does not replace the chain', function (done) {
-      newblockchain.chain=[{new:"chain"}];
-      blockchain.replaceChain(newblockchain);
-      expect(blockchain.chain).to.deep.equalInAnyOrder(newblockchain);
-
+    it('does not replace the chain', async function (done) {
+      newblockchain.chain = [{ new: "chain" }];
+      blockchain.replaceChain(newblockchain.chain);
+      expect(blockchain.chain).to.deep.equalInAnyOrder(originalChain);
+      done();
     });
 
   });
-  describe('when the chain is longer', async function () {
+  describe('when the new  chain is longer', async function () {
+    beforeEach(() => {
+      newblockchain.addBlock({ data: 'Bears' });
+      newblockchain.addBlock({ data: 'Beets' });
+    });
     describe('and the chain is invalid', async function () {
-      it('does not replace the chain', function (done) {
+      beforeEach(() => {
+
       });
+
+      it('does not replace the chain', async (done) => {
+        newblockchain.chain[2].hash = 'some-fake-hash';
+        blockchain.replaceChain(newblockchain.chain);
+
+        expect(blockchain.chain).to.deep.equalInAnyOrder(originalChain);
+        done();
+
+      });
+
+      // it('logs an error', () => {
+      //   expect(errorMock).toHaveBeenCalled();
+      // });
     });
     describe('and the chain is valid ', async function () {
       it('replace the chain ', function (done) {
+        blockchain.replaceChain(newblockchain.chain);
+        expect(blockchain.chain).to.deep.equalInAnyOrder(newblockchain.chain);
+        done();
+
       });
     });
   });
