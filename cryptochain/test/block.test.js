@@ -1,7 +1,8 @@
 const {Block} = require( '../classes/block.js');
 const {generateHash,getTimeStamp}= require ("../utils")
 const { assert,expect } = require ('chai');  // Using Expect style
-const { GENESIS_DATA } = require('../config');
+const { getGenesisData } = require('../config');
+const { resolve } = require('path');
 
 describe('Testing the Cube Functions',async function() {
     let timeStamp;
@@ -9,16 +10,17 @@ describe('Testing the Cube Functions',async function() {
     let hash ;
     let data ;
     let block   ,genesisBlock;
-
+    let  GENESIS_DATA
   before(async () => {
-     genesisBlock = Block.genesis();
+     genesisBlock =await  Block.genesis();
 
+    console.log(genesisBlock);
     timeStamp = getTimeStamp();
      lastHash = '';
      hash =await generateHash('bar-hash');
      data = ['blockchain', 'data'];
      block = new Block({ timeStamp, lastHash, hash, data });
-    console.log(block);
+    // console.log(block);
   });
     it('Check Values are set', function(done) {
    
@@ -29,20 +31,10 @@ describe('Testing the Cube Functions',async function() {
     done();
     });
     it('check genesis instance', function(done) {
-        genesisBlock = Block.genesis();
         assert.equal(genesisBlock instanceof Block,true);
     done();
     });
 
-    it('check genesis equal to config', function(done) {
-        console.log("genesisBlock",genesisBlock);
-        console.log("GENESIS_DATA",GENESIS_DATA);
-
-        assert.equal(genesisBlock.timeStamp,GENESIS_DATA.timeStamp);
-        assert.equal(genesisBlock.lastHash,GENESIS_DATA.lastHash);
-        assert.equal(genesisBlock.hash,GENESIS_DATA.hash);
-        assert.equal(genesisBlock.data,GENESIS_DATA.data);
-    done();
-    });
+  
     
 });

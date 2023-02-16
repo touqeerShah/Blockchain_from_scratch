@@ -1,4 +1,4 @@
-const { GENESIS_DATA } = require('../config');
+const { GENESIS_DATA ,getGenesisData} = require('../config');
 
 class Block {
   constructor({data, hash, lastHash,timeStamp}) { // { } bracket help to send argument in any order with sequence
@@ -7,8 +7,8 @@ class Block {
     this.lastHash = lastHash;
     this.timeStamp=timeStamp
   }
-  static genesis() {
-    return new this(GENESIS_DATA);
+  static async genesis() {
+    return new this(await getGenesisData());
   }
 }
 
