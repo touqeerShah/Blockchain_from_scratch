@@ -1,0 +1,23 @@
+{
+  "name": "blockchain-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^18.0.6",
+    "crypto-hash": "^2.0.1",
+    "gps-time": "^1.0.9",
+    "node-fetch": "^3.2.6",
+    "object-hash": "^3.0.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "jest": "^29.4.3",
+    "mocha": "^10.2.0"
+  }
+}
