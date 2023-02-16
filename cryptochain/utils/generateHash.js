@@ -1,6 +1,10 @@
-var hash = require('object-hash');
-const generateHash= async (data)=>{
-    return hash(data);
-  }
+var crypto = require('crypto');
+const generateHash = (...inputs) => {
+  const hash = crypto.createHash('sha256');
 
-module.exports= generateHash;
+  hash.update(inputs.map(data => JSON.stringify(data)).sort().join(' '));
+
+  return hash.digest('hex');
+}
+
+module.exports = generateHash;

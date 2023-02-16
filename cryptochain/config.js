@@ -1,17 +1,18 @@
-const {generateHash,getTimeStamp}= require ("./utils")
+const { generateHash, getTimeStamp } = require("./utils")
 
 let GENESIS_DATA;
-const getGenesisData= async ()=>{
-    const hash =await generateHash('GENESIS_DATA')
-     GENESIS_DATA = {
-        timeStamp: getTimeStamp(),
-        lastHash: '-----',
-        hash:hash ,
-        data: []
-      };
-      return GENESIS_DATA;
-      
+const getGenesisData = () => {
+  const timeStamp=getTimeStamp()
+  const hash = generateHash(timeStamp,'-----','GENESIS_DATA')
+  GENESIS_DATA = {
+    timeStamp: timeStamp,
+    lastHash: '-----',
+    hash: hash,
+    data: ['GENESIS_DATA']
+  };
+  return GENESIS_DATA;
+
 }
 
-getGenesisData();    
-module.exports = { GENESIS_DATA,getGenesisData };
+getGenesisData();
+module.exports = { getGenesisData };
