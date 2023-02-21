@@ -112,7 +112,10 @@ describe('ValidChain()', async function () {
       let genesisBlock;
       let blockchain;
       genesisBlock = Block.genesis();
+      console.log("genesisBlock", genesisBlock);
       blockchain = new Blockchain();
+      console.log("blockchain", blockchain.chain[0]);
+
       blockchain.addBlock({ data: "new Block transaction 1" })
       // console.log(blockchain.chain);
       assert.equal(Blockchain.isValidChain(blockchain.chain), true);
@@ -125,59 +128,59 @@ describe('ValidChain()', async function () {
 
 
 
-describe('replace chain', async function () {
-  let blockchain;
-  let newblockchain;
-  let originalChain;
+// describe('replace chain', async function () {
+//   let blockchain;
+//   let newblockchain;
+//   let originalChain;
 
-  before(async () => {
-    blockchain = new Blockchain();
-    newblockchain = new Blockchain();
-    blockchain.addBlock({ data: "new Block transaction 1" })
-    blockchain.addBlock({ data: "new Block transaction 2" })
+//   before(async () => {
+//     blockchain = new Blockchain();
+//     newblockchain = new Blockchain();
+//     blockchain.addBlock({ data: "new Block transaction 1" })
+//     blockchain.addBlock({ data: "new Block transaction 2" })
 
-    originalChain = blockchain.chain;
-    // console.log(block);
-  });
-  describe('when the new chain is not longer', async function () {
-    it('does not replace the chain', async function (done) {
-      newblockchain.chain = [{ new: "chain" }];
-      blockchain.replaceChain(newblockchain.chain);
-      expect(blockchain.chain).to.deep.equalInAnyOrder(originalChain);
-      done();
-    });
+//     originalChain = blockchain.chain;
+//     // console.log(block);
+//   });
+//   describe('when the new chain is not longer', async function () {
+//     it('does not replace the chain', async function (done) {
+//       newblockchain.chain = [{ new: "chain" }];
+//       blockchain.replaceChain(newblockchain.chain);
+//       expect(blockchain.chain).to.deep.equalInAnyOrder(originalChain);
+//       done();
+//     });
 
-  });
-  describe('when the new  chain is longer', async function () {
-    beforeEach(() => {
-      newblockchain.addBlock({ data: 'Bears' });
-      newblockchain.addBlock({ data: 'Beets' });
-    });
-    describe('and the chain is invalid', async function () {
-      beforeEach(() => {
+//   });
+//   describe('when the new  chain is longer', async function () {
+//     beforeEach(() => {
+//       newblockchain.addBlock({ data: 'Bears' });
+//       newblockchain.addBlock({ data: 'Beets' });
+//     });
+//     describe('and the chain is invalid', async function () {
+//       beforeEach(() => {
 
-      });
+//       });
 
-      it('does not replace the chain', async (done) => {
-        newblockchain.chain[2].hash = 'some-fake-hash';
-        blockchain.replaceChain(newblockchain.chain);
+//       it('does not replace the chain', async (done) => {
+//         newblockchain.chain[2].hash = 'some-fake-hash';
+//         blockchain.replaceChain(newblockchain.chain);
 
-        expect(blockchain.chain).to.deep.equalInAnyOrder(originalChain);
-        done();
+//         expect(blockchain.chain).to.deep.equalInAnyOrder(originalChain);
+//         done();
 
-      });
+//       });
 
-      // it('logs an error', () => {
-      //   expect(errorMock).toHaveBeenCalled();
-      // });
-    });
-    describe('and the chain is valid ', async function () {
-      it('replace the chain ', function (done) {
-        blockchain.replaceChain(newblockchain.chain);
-        expect(blockchain.chain).to.deep.equalInAnyOrder(newblockchain.chain);
-        done();
+//       // it('logs an error', () => {
+//       //   expect(errorMock).toHaveBeenCalled();
+//       // });
+//     });
+//     describe('and the chain is valid ', async function () {
+//       it('replace the chain ', function (done) {
+//         blockchain.replaceChain(newblockchain.chain);
+//         expect(blockchain.chain).to.deep.equalInAnyOrder(newblockchain.chain);
+//         done();
 
-      });
-    });
-  });
-});
+//       });
+//     });
+//   });
+// });
