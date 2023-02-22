@@ -1,5 +1,7 @@
+var hexToBinary = require('hex-to-binary');
+
 const { time, timeStamp } = require('console');
-const { GENESIS_DATA, getGenesisData } = require('../config');
+const { GENESIS_DATA, MINE_RATE, getGenesisData } = require('../config');
 const { generateHash, getTimeStamp } = require("../utils")
 
 class Block {
@@ -17,15 +19,16 @@ class Block {
   static mineBlock({ lastBlock, data }) {
     let newHash, timeStamp;
     const lastHash = lastBlock.hash
-    const difficulty = lastBlock.difficulty
+    let difficulty = lastBlock.difficulty
 
     let nonce = 0;
     do {
       nonce++;
       timeStamp = getTimeStamp()
+      difficulty = this.adjustDifficulty({ originalBlock: lastBlock, timeStamp })
       newHash = generateHash(timeStamp, lastHash, data, nonce, difficulty);
 
-    } while (newHash.substring(0, difficulty) !== "0".repeat(difficulty))
+    } while (hexToBinary(newHash).substring(0, difficulty) !== "0".repeat(difficulty))
 
 
 
@@ -39,6 +42,11 @@ class Block {
         difficulty
       }
     )
+  }
+
+  static adjustDifficulty({ originalBlock, timeStamp }) {
+    if (originalBlock.difficulty < 0) return 1;
+    return (timeStamp - originalBlock.timeStamp) > MINE_RATE ? originalBlock.difficulty - 1 : originalBlock.difficulty + 1;
   }
 
 }

@@ -1,7 +1,8 @@
+var hexToBinary = require('hex-to-binary');
 const { Block } = require("../classes/block.js");
 const { generateHash, getTimeStamp } = require("../utils");
 const { assert, expect } = require("chai"); // Using Expect style
-const { getGenesisData } = require("../config");
+const { getGenesisData, MINE_RATE } = require("../config");
 const { resolve } = require("path");
 
 describe("genesisBlock", async function () {
@@ -74,10 +75,54 @@ describe("mineBlock", async function () {
     done();
   });
   it("set a hash that match the difficulty  criteria", function (done) {
+    let binaryHash = hexToBinary(mineBlock.hash)
+    console.log("binaryHash", binaryHash);
     assert.equal(
-      mineBlock.hash.substring(0, mineBlock.difficulty),
+      binaryHash.substring(0, mineBlock.difficulty),
       "0".repeat(mineBlock.difficulty)
     );
+    done();
+  });
+  it("adjust the difficulty ", function (done) {
+    const possibleResults = [lastBlock.difficulty + 1, lastBlock.difficulty - 1]
+
+    assert.equal(
+      possibleResults.includes(mineBlock.difficulty), true
+    );
+    done();
+  });
+});
+describe("Adjust Mine Difficulty ", async function () {
+  let timeStamp;
+  let lastBlock = "";
+  let hash;
+  let data;
+  let block, mineBlock;
+  let GENESIS_DATA;
+  before(async () => {
+    lastBlock = Block.genesis();
+    data = "new Transaction happend";
+    mineBlock = Block.mineBlock({ lastBlock, data });
+
+    console.log("mineBlock", mineBlock);
+  });
+  it("raise the difficulty fro a quickly mined block", function (done) {
+    let newDiddiculty = Block.adjustDifficulty({ originalBlock: mineBlock, timeStamp: mineBlock.timeStamp + MINE_RATE - 1000 })
+    // console.log("newDiddiculty", newDiddiculty);
+    assert.equal(mineBlock.difficulty + 1, newDiddiculty);
+
+    done();
+  });
+  it("lower the difficulty fro a quickly mined block", function (done) {
+    let newDiddiculty = Block.adjustDifficulty({ originalBlock: mineBlock, timeStamp: mineBlock.timeStamp + MINE_RATE + 1000 })
+    console.log("newDiddiculty", newDiddiculty);
+    assert.equal(mineBlock.difficulty - 1, newDiddiculty);
+    done();
+  });
+  it("lower the difficulty fro a quickly mined block", function (done) {
+    mineBlock.difficulty = -1
+    let newDiddiculty = Block.adjustDifficulty({ originalBlock: mineBlock })
+    assert.equal(1, newDiddiculty);
     done();
   });
 });
