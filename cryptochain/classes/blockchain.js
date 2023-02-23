@@ -26,7 +26,7 @@ class Blockchain {
     };
     for (let i = 1; i < chain.length; i++) {
       const { timeStamp, lastHash, hash, data, nonce, difficulty } = chain[i];
-      console.log("lastHash 3", i, timeStamp, lastHash, data);
+      // console.log("lastHash 3", i, timeStamp, lastHash, data);
 
       const actualLastHash = chain[i - 1].hash;
       const lastDifficulty = chain[i - 1].difficulty;
@@ -35,7 +35,7 @@ class Blockchain {
       console.log("here 2");
 
       const validatedHash = generateHash(timeStamp, lastHash, data, nonce, difficulty);
-      console.log("here 3", i, hash, validatedHash);
+      // console.log("here 3", i, hash, validatedHash);
 
       if (hash !== validatedHash) return false;
 
@@ -51,7 +51,9 @@ class Blockchain {
       console.error('The incoming chain must be longer');
       return;
     }
-    if (Blockchain.isValidChain(chain)) {
+
+    console.log("Blockchain.isValidChain(chain)", Blockchain.isValidChain(chain));
+    if (!Blockchain.isValidChain(chain)) {
       console.error('The incoming chain is not valid');
       return;
     }
