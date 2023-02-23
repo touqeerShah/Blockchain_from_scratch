@@ -7,9 +7,13 @@ class Blockchain {
   }
 
   addBlock({ data }) {
-    this.chain.push(Block.mineBlock({
-      lastBlock: this.chain[this.chain.length - 1], data
-    }));
+    console.log("data", data);
+
+    let newBlock = Block.mineBlock({
+      lastBlock: this.chain[this.chain.length - 1], data: data
+    })
+    console.log(newBlock);
+    this.chain.push(newBlock);
   }
   static isValidChain(chain) {
     console.log("here 1");
