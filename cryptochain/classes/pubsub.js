@@ -8,7 +8,7 @@ class PubSub {
     constructor({ blockchain }) {
         this.blockchain = blockchain;
         this.publisher = redis.createClient();
-        this.subscriber = redis.createClient();
+        this.subscriberClient = redis.createClient();
 
     }
     async setupConnection() {
@@ -17,12 +17,12 @@ class PubSub {
 
         await this.publisher.connect();
 
-        const subscriber = this.subscriber.duplicate();
-        await subscriber.connect();
+        this.subscriber = this.subscriberClient.duplicate();
+        await this.subscriber.connect();
 
 
         // here we tell on which channel it will going to listen messages.
-        await subscriber.subscribe(CHANNELS.BLOCKCHAIN, (message, channel) => this.handleMessage(channel, message));
+        await this.subscriber.subscribe(CHANNELS.BLOCKCHAIN, (message, channel) => this.handleMessage(channel, message));
 
     }
 
@@ -38,7 +38,16 @@ class PubSub {
 
 
     publish({ channel, message }) {
-        this.publisher.publish(channel, message);
+        this.subscriber.unsubscribe(channel, () => {
+            this.publisher.publish(channel, message, () => {
+                this.subscriber.subscribe(channel);
+            });
+
+        })
+
+
+
+        // this.publisher.publish(channel, message);
     }
 
     broadcastChain() {

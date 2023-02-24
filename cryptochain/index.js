@@ -14,7 +14,6 @@ const ROOT_NODE_ADDRESS = `http://localhost:${DEFAULT_PORT}`
 let testPubSub = async () => {
     await pubsub.setupConnection();
     pubsub.broadcastChain()
-    await syncChain();
 
 }
 testPubSub();
@@ -65,6 +64,7 @@ let syncChain = async () => {
 let PORT = PEE_PORT || DEFAULT_PORT
 app.listen(PORT, async () => {
     console.log(`listening at localhost:${PORT}`);
+    PORT != DEFAULT_PORT ? await syncChain() : "";
 
 });
 
