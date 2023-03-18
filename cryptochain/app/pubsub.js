@@ -44,9 +44,6 @@ class PubSub {
             });
 
         })
-
-
-
         // this.publisher.publish(channel, message);
     }
 

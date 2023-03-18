@@ -12,7 +12,7 @@ class Blockchain {
     let newBlock = Block.mineBlock({
       lastBlock: this.chain[this.chain.length - 1], data: data
     })
-    console.log(newBlock);
+    console.log("=== ", newBlock);
     this.chain.push(newBlock);
   }
   static isValidChain(chain) {

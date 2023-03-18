@@ -175,8 +175,11 @@ describe('replace chain', async function () {
   });
   describe('when the new  chain is longer', async function () {
     beforeEach(() => {
+      newblockchain = new Blockchain();
       newblockchain.addBlock({ data: 'Bears' });
       newblockchain.addBlock({ data: 'Beets' });
+      newblockchain.addBlock({ data: 'Beets' });
+
     });
     describe('and the chain is invalid', async function () {
       beforeEach(() => {

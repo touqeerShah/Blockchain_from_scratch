@@ -1,6 +1,8 @@
 const { generateHash, getTimeStamp } = require("./utils")
 
+const STARTING_BALANCE = 1000
 const MINE_RATE = 10
+
 let GENESIS_DATA;
 const getGenesisData = () => {
   const nonce = 0;
@@ -18,4 +20,4 @@ const getGenesisData = () => {
 }
 
 getGenesisData();
-module.exports = { getGenesisData, MINE_RATE };
+module.exports = { getGenesisData, MINE_RATE, STARTING_BALANCE };
