@@ -8,4 +8,4 @@ const generateHash = (...inputs) => {
   return hash.digest('hex');
 }
 
-module.exports = generateHash;
+module.exports = { generateHash };

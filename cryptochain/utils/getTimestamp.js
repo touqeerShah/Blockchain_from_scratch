@@ -1,7 +1,7 @@
 var gpsTime = require('gps-time');
 
- const getTimeStamp=()=>{
+const getTimeStamp = () => {
     var unixMS = Date.now();  // 1454168480000
     return gpsTime.toGPSMS(unixMS);
 }
-module.exports= getTimeStamp;
+module.exports = { getTimeStamp };

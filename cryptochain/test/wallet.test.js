@@ -1,6 +1,6 @@
 
 const { Wallet } = require("../classes/wallet.js");
-const { verifySignature } = require("./../utils/verifySignature")
+const { verifySignature } = require("./../utils")
 const { assert, expect } = require("chai"); // Using Expect style
 
 describe("Wallet", async function () {
@@ -19,7 +19,7 @@ describe("Wallet", async function () {
         done();
     });
     it("hash a publicKey", function (done) {
-        console.log("wallet", wallet);
+        // console.log("wallet", wallet);
         expect(wallet).to.have.own.property('publicKey');
         done();
     });
@@ -32,7 +32,7 @@ describe("Wallet", async function () {
             done();
         });
         it("Verify Signature is not Valid", function (done) {
-            console.log("wallet", wallet);
+            // console.log("wallet", wallet);
             assert.equal(verifySignature({ publicKey: wallet.publicKey, data: data, signature: new Wallet().sign(data) }), false);
             done();
         });

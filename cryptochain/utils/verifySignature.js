@@ -1,5 +1,5 @@
 var EC = require('elliptic').ec;
-const { generateHash } = require("./")
+const { generateHash } = require("./generateHash")
 
 // Create and initialize EC context
 // (better do it once and reuse it)
@@ -11,4 +11,4 @@ function verifySignature({ publicKey, data, signature }) {
     return key.verify(generateHash(data), signature);
 }
 
-module.exports = { verifySignature }
+module.exports = { verifySignature } 
