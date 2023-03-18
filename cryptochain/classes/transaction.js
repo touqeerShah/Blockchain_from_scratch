@@ -20,7 +20,7 @@ class Transaction {
         const input = {}
         input.timestamp = getTimeStamp()
         input.amount = senderWaller.balance;
-        input.publicKey = senderWaller.publicKey;
+        input.address = senderWaller.publicKey;
         input.signature = senderWaller.sign(outputMap)
         return input;
     }
@@ -32,11 +32,22 @@ class Transaction {
             console.error("Invalid output map")
             return false
         }
-        if (!verifySignature({ publicKey: transaction.input.publicKey, data: transaction.outputMap, signature: transaction.input.signature })) {
+        if (!verifySignature({ publicKey: transaction.input.address, data: transaction.outputMap, signature: transaction.input.signature })) {
             console.error("Invalid signature")
             return false;
         }
         return true;
+    }
+
+    update({ senderWaller, receiver, amount }) {
+        console.log("receiver", receiver);
+        if (this.outputMap[senderWaller.publicKey] < amount) {
+            console.error("Amount exceeds balance");
+            throw new Error('Amount exceeds balance');
+        }
+        this.outputMap[receiver] ? this.outputMap[receiver] += amount : this.outputMap[receiver] = amount;
+        this.outputMap[senderWaller.publicKey] = this.outputMap[senderWaller.publicKey] - amount;
+        this.input = this.createInputMap({ senderWaller, outputMap: this.outputMap });
     }
 }
 
