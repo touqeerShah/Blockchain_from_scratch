@@ -119,3 +119,5 @@ test();
 
 
 cross-env it module to set environment varibales programatical with depend on OS you are using
+
+- -  To generate Public key and private key we are using `https://www.npmjs.com/package/elliptic`
