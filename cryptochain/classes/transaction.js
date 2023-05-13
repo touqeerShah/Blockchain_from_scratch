@@ -1,16 +1,20 @@
 const { v4: uuidv4 } = require("uuid");
 const { getTimeStamp } = require("./../utils");
 const { verifySignature } = require("./../utils");
+const { REWARD_INPUT, MINER_REWARD } = require("./../config.js");
 
 class Transaction {
-  constructor({ senderWaller, receiver, amount }) {
+  constructor({ senderWaller, receiver, amount, outputMap, input }) {
     // { } bracket help to send argument in any order with sequence
     this.id = uuidv4();
-    this.outputMap = this.createOutputMap({ senderWaller, receiver, amount });
-    this.input = this.createInputMap({
-      senderWaller,
-      outputMap: this.outputMap,
-    });
+    this.outputMap =
+      outputMap || this.createOutputMap({ senderWaller, receiver, amount });
+    this.input =
+      input ||
+      this.createInputMap({
+        senderWaller,
+        outputMap: this.outputMap,
+      });
   }
   createOutputMap({ senderWaller, receiver, amount }) {
     const outputMap = {};
@@ -31,9 +35,9 @@ class Transaction {
     const outputTotalAmount = Object.values(transaction.outputMap).reduce(
       (total, amount) => total + amount
     );
-    console.log("outputTotalAmount", outputTotalAmount);
+    // console.log("outputTotalAmount", outputTotalAmount);
     if (outputTotalAmount != transaction.input.amount) {
-      console.error("Invalid output map");
+      // console.error("Invalid output map");
       return false;
     }
     if (
@@ -43,12 +47,17 @@ class Transaction {
         signature: transaction.input.signature,
       })
     ) {
-      console.error("Invalid signature");
+      // console.error("Invalid signature");
       return false;
     }
     return true;
   }
-
+  static rewardTransaction({ minerWallet }) {
+    return new this({
+      input: REWARD_INPUT,
+      outputMap: { [minerWallet.publicKey]: MINER_REWARD },
+    });
+  }
   update({ senderWaller, receiver, amount }) {
     console.log("receiver", receiver);
     if (this.outputMap[senderWaller.publicKey] < amount) {

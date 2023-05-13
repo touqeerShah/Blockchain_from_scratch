@@ -21,6 +21,11 @@ class TransactionPool {
   setMap(transactionMap) {
     this.transactionMap = transactionMap;
   }
+  validTransaction() {
+    return Object.values(this.transactionMap).filter((transaction) =>
+      Transaction.validateTransactions(transaction)
+    );
+  }
 }
 
 module.exports = { TransactionPool };
