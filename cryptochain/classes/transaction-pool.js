@@ -11,6 +11,10 @@ class TransactionPool {
     // console.log("setTransaction ", this.conunt++, transaction);
     this.transactionMap[transaction.id] = transaction;
   }
+  clean() {
+    // console.log("setTransaction ", this.conunt++, transaction);
+    this.transactionMap = {};
+  }
   existingTransaction({ inputAddress }) {
     const transactions = Object.values(this.transactionMap);
     // console.log("transactions", transactions);
@@ -25,6 +29,17 @@ class TransactionPool {
     return Object.values(this.transactionMap).filter((transaction) =>
       Transaction.validateTransactions(transaction)
     );
+  }
+  clearBlockchainTransactions({ chain }) {
+    for (let index = 1; index < chain.length; index++) {
+      const block = chain[index];
+      // console.log("block ==>", block.data);
+      // for (let transaction of block.data) {
+      if (this.transactionMap[block.data.id]) {
+        delete this.transactionMap[block.data.id];
+      }
+      // }
+    }
   }
 }
 

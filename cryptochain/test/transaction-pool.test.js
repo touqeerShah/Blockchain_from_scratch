@@ -1,6 +1,8 @@
 const { Wallet } = require("../classes/wallet.js");
 const { Transaction } = require("../classes/transaction.js");
 const { TransactionPool } = require("../classes/transaction-pool.js");
+const { Blockchain } = require("../classes/blockchain");
+
 const { assert, expect } = require("chai"); // Using Expect style
 const { log } = require("console");
 describe("Transaction Pool", async function () {
@@ -61,6 +63,39 @@ describe("Transaction Pool", async function () {
       );
       expect(transactionPool.validTransaction()).to.deep.equal(
         validTransactions
+      );
+      done();
+    });
+  });
+
+  describe("Clean  ", async function () {
+    it("Clean Transaction Pool", function (done) {
+      transactionPool.clean();
+      expect(transactionPool.transactionMap).to.deep.equal({});
+      done();
+    });
+  });
+  describe("Clean  Blockchain Transaction ", async function () {
+    it("Clean the pool of any existing   Blockchain Transaction ", function (done) {
+      let blockchain = new Blockchain();
+      let transactionPool = new TransactionPool();
+      let expectedTransactionMap = {};
+      for (let index = 0; index < 6; index++) {
+        let transaction = new Wallet().createTransaction({
+          amount: index * 2,
+          receiver: "foo" + index,
+        });
+        transactionPool.setTransaction(transaction);
+        if (index % 2 === 0) {
+          blockchain.addBlock({ data: transaction });
+        } else {
+          expectedTransactionMap[transaction.id] = transaction;
+        }
+      }
+      transactionPool.clearBlockchainTransactions({ chain: blockchain.chain });
+
+      expect(transactionPool.transactionMap).to.deep.equal(
+        expectedTransactionMap
       );
       done();
     });

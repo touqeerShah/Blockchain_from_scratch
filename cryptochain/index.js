@@ -4,7 +4,7 @@ const axios = require("axios");
 const { Blockchain } = require("./classes/blockchain");
 const { TransactionPool } = require("./classes/transaction-pool");
 const { Wallet } = require("./classes/wallet");
-
+const { TransactionMiner } = require("./app/teansaction-miner");
 const PubSub = require("./app/pubsub");
 const { Transaction } = require("./classes/transaction");
 const { log } = require("console");
@@ -15,8 +15,14 @@ app.use(express.json()); // <==== parse request body as JSON
 const blockchain = new Blockchain();
 const transactionPool = new TransactionPool();
 const wallet = new Wallet();
-
 const pubsub = new PubSub({ blockchain, transactionPool, wallet });
+const transactionMiner = new TransactionMiner({
+  blockchain,
+  transactionPool,
+  wallet,
+  pubsub,
+});
+
 const DEFAULT_PORT = 3000;
 const ROOT_NODE_ADDRESS = `http://localhost:${DEFAULT_PORT}`;
 let testPubSub = async () => {
@@ -66,6 +72,10 @@ app.get("/api/get-transact-pool-map", (req, res) => {
   res.status(200).json(transactionPool.transactionMap);
 });
 
+app.get("/api/mine-transaction", (req, res) => {
+  transactionMiner.mineTransaction();
+  res.redirect("/api/blocks");
+});
 let PEE_PORT;
 if (process.env.GENERATE_PEER_PORT === "true") {
   PEE_PORT = DEFAULT_PORT + Math.ceil(Math.random() * 1000);
