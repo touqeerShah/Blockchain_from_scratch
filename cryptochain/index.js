@@ -58,7 +58,11 @@ app.post("/api/transact", (req, res) => {
     if (transaction) {
       transaction.update({ senderWaller: wallet, receiver, amount });
     } else {
-      transaction = wallet.createTransaction({ amount, receiver });
+      transaction = wallet.createTransaction({
+        amount,
+        receiver,
+        chain: blockchain.chain,
+      });
     }
   } catch (error) {
     return res.status(400).json({ type: "error", message: error.message });
@@ -76,6 +80,17 @@ app.get("/api/mine-transaction", (req, res) => {
   transactionMiner.mineTransaction();
   res.redirect("/api/blocks");
 });
+
+app.get("/api/wallet-info", (req, res) => {
+  res.status(200).json({
+    address: wallet.publicKey,
+    balance: Wallet.calculateBalance({
+      chain: blockchain.chain,
+      address: wallet.publicKey,
+    }),
+  });
+});
+
 let PEE_PORT;
 if (process.env.GENERATE_PEER_PORT === "true") {
   PEE_PORT = DEFAULT_PORT + Math.ceil(Math.random() * 1000);

@@ -31,14 +31,15 @@ class TransactionPool {
     );
   }
   clearBlockchainTransactions({ chain }) {
+    console.log("clearBlockchainTransactions");
     for (let index = 1; index < chain.length; index++) {
       const block = chain[index];
-      // console.log("block ==>", block.data);
-      // for (let transaction of block.data) {
-      if (this.transactionMap[block.data.id]) {
-        delete this.transactionMap[block.data.id];
+      console.log("block ==>", block);
+      for (let transaction of block.data) {
+        if (this.transactionMap[transaction.id]) {
+          delete this.transactionMap[transaction.id];
+        }
       }
-      // }
     }
   }
 }

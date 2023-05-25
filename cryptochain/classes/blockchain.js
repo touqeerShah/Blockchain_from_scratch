@@ -52,7 +52,7 @@ class Blockchain {
 
     return true;
   }
-  replaceChain(chain) {
+  replaceChain(chain, onSuccess) {
     // console.log(
     //   "this.chain.length<=chain.length",
     //   chain.length,
@@ -67,6 +67,7 @@ class Blockchain {
     //   "Blockchain.isValidChain(chain)",
     //   Blockchain.isValidChain(chain)
     // );
+    if (onSuccess) onSuccess();
     if (!Blockchain.isValidChain(chain)) {
       console.error("The incoming chain is not valid");
       return;

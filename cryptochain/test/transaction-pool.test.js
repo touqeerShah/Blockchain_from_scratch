@@ -87,7 +87,7 @@ describe("Transaction Pool", async function () {
         });
         transactionPool.setTransaction(transaction);
         if (index % 2 === 0) {
-          blockchain.addBlock({ data: transaction });
+          blockchain.addBlock({ data: [transaction] });
         } else {
           expectedTransactionMap[transaction.id] = transaction;
         }
